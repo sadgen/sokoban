@@ -2,12 +2,11 @@
 
 import sys
 import pygame
-import string
-import Queue
+import queue
 
 class game:
 
-    def is_valid_value(self,char):
+    def is_valid_value(self, char):
         if ( char == ' ' or #floor
             char == '#' or #wall
             char == '@' or #worker on floor
@@ -20,11 +19,11 @@ class game:
             return False
 
     def __init__(self,filename,level):
-        self.queue = Queue.LifoQueue()
+        self.queue = queue.LifoQueue()
         self.matrix = []
 #        if level < 1 or level > 50:
-        if level < 1:
-            print "ERROR: Level "+str(level)+" is out of range"
+        if int(level) < 1:
+            print("ERROR: Level "+str(level)+" is out of range")
             sys.exit(1)
         else:
             file = open(filename,'r')
@@ -43,7 +42,7 @@ class game:
                             elif c == '\n': #jump to next row when newline
                                 continue
                             else:
-                                print "ERROR: Level "+str(level)+" has invalid value "+c
+                                print("ERROR: Level "+str(level)+" has invalid value "+c)
                                 sys.exit(1)
                         self.matrix.append(row)
                     else:
@@ -74,7 +73,7 @@ class game:
         if self.is_valid_value(content):
             self.matrix[y][x] = content
         else:
-            print "ERROR: Value '"+content+"' to be added is not valid"
+            print("ERROR: Value '"+content+"' to be added is not valid")
 
     def worker(self):
         x = 0
@@ -230,6 +229,7 @@ def get_key():
     else:
       pass
 
+
 def display_box(screen, message):
   "Print a message in a box in the middle of the screen"
   fontobject = pygame.font.Font(None,18)
@@ -245,6 +245,7 @@ def display_box(screen, message):
     screen.blit(fontobject.render(message, 1, (255,255,255)),
                 ((screen.get_width() / 2) - 100, (screen.get_height() / 2) - 10))
   pygame.display.flip()
+
 
 def display_end(screen):
     message = "Level Completed"
@@ -266,7 +267,7 @@ def ask(screen, question):
   "ask(screen, question) -> answer"
   pygame.font.init()
   current_string = []
-  display_box(screen, question + ": " + string.join(current_string,""))
+  display_box(screen, question + ": " + ''.join(current_string))
   while 1:
     inkey = get_key()
     if inkey == pygame.K_BACKSPACE:
@@ -277,16 +278,16 @@ def ask(screen, question):
       current_string.append("_")
     elif inkey <= 127:
       current_string.append(chr(inkey))
-    display_box(screen, question + ": " + string.join(current_string,""))
-  return string.join(current_string,"")
+    display_box(screen, question + ": " + ''.join(current_string))
+  return ''.join(current_string)
 
 def start_game():
     start = pygame.display.set_mode((320,240))
     level = ask(start,"Select Level")
-    if level > 0:
+    if int(level) > 0:
         return level
     else:
-        print "ERROR: Invalid Level: "+str(level)
+        print("ERROR: Invalid Level: "+str(level))
         sys.exit(2)
 
 wall = pygame.image.load('images/wall.png')
